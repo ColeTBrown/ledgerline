@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ledgerline
 
-## Getting Started
+A professional-grade financial workstation for analysts, wealth managers, derivatives traders, fixed-income desks and FP&A teams. Dense terminal-style UI, live market data with provenance, and a fully tested client-side calculation library.
 
-First, run the development server:
+> The product name lives in [`config/brand.ts`](config/brand.ts). Change it there to rebrand.
+
+## Status
+
+| Phase | Scope | Status |
+| --- | --- | --- |
+| 1 | Project setup, design system, layout shell, role switcher, command palette, landing page | ✅ |
+| 2 | Finance math library + test suite | ⏳ |
+| 3 | Market data layer (Finnhub, U.S. Treasury, SEC EDGAR), source badges, ticker search, ticker strip | ⏳ |
+| 4 | Shared tools: TVM, spreadsheet, scenarios, exports | ⏳ |
+| 5 | Analyst + Corporate Finance tools | ⏳ |
+| 6 | Wealth Manager tools | ⏳ |
+| 7 | Options + Fixed Income tools | ⏳ |
+| 8 | Polish, accessibility, docs | ⏳ |
+
+## Features
+
+- **Role-based workspaces**: Equity Analyst, Wealth Manager, Options, Fixed Income and Corporate Finance. Each one changes the sidebar, dashboard and terminology.
+- **Command palette** (`⌘K` / `Ctrl+K`): jump to any tool, switch role, or run a command.
+- **Dark terminal theme** by default, plus a light client-facing theme.
+- **Number formatting**: tabular monospaced figures, locale-aware separators, configurable decimals, negatives shown with a minus sign or in parentheses.
+- **Live data provenance** (Phase 3): every sourced number shows a LIVE / DELAYED / CACHED / MANUAL badge with its source and timestamp.
+
+### Keyboard shortcuts
+
+| Shortcut | Action |
+| --- | --- |
+| `⌘K` / `Ctrl+K` | Command palette |
+| `⌥1`–`⌥5` / `Alt+1`–`Alt+5` | Switch role (browsers reserve `⌘1`–`⌘9` for tab switching) |
+| `⌘B` / `Ctrl+B` | Toggle sidebar |
+| `⌘.` / `Ctrl+.` | Toggle notes panel |
+| `⌘,` / `Ctrl+,` | Settings |
+
+## Tech stack
+
+Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS v4 · shadcn/ui-style components on Radix · Zustand · TanStack Query · Vitest. Charts (Recharts, lightweight-charts), AG Grid Community and ExcelJS arrive with the phases that use them.
+
+## Getting started
+
+Requirements: Node.js 20.9+ and pnpm 10.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+cp .env.example .env.local   # optional: the app runs fully in manual mode without keys
+pnpm dev                     # http://localhost:3000 (landing) and /app (workstation)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Free Finnhub API key
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Create a free account at <https://finnhub.io/register>.
+2. Copy the API key from your dashboard.
+3. Set `FINNHUB_API_KEY=...` in `.env.local`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Also set `SEC_USER_AGENT="Your Firm you@yourfirm.com"`. SEC EDGAR requires a descriptive User-Agent with a contact email. No key is needed for the U.S. Treasury feed.
 
-## Learn More
+### Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Command | Purpose |
+| --- | --- |
+| `pnpm dev` | Development server |
+| `pnpm build` / `pnpm start` | Production build / serve |
+| `pnpm lint` | ESLint |
+| `pnpm typecheck` | Generate route types + `tsc --noEmit` |
+| `pnpm test` | Vitest (never calls live APIs) |
+| `pnpm check` | Lint + typecheck + tests |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+app/                 Next.js routes: "/" landing, "/app" workstation, "/api/*" server routes
+components/          ui/ (primitives), shell/, data/, calc/, dashboard/, marketing/
+config/              brand.ts (rename here), roles.ts
+tools/registry.ts    Every tool: id, roles, group, icon, keywords
+lib/finance/         Pure financial math (Phase 2)
+lib/data/            Market data provider interface + adapters (Phase 3)
+lib/format/          Number / currency / percent formatting
+lib/store/           Zustand stores (settings persisted to localStorage)
+tests/               Vitest suites
+```
 
-## Deploy on Vercel
+## Screenshots
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+_Coming in Phase 8._
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploying to Vercel
+
+1. Import the GitHub repository in Vercel. The framework preset is detected automatically.
+2. Under **Project → Settings → Environment Variables**, add `FINNHUB_API_KEY` and `SEC_USER_AGENT` (and optionally the `*_PROVIDER` variables) for Production and Preview.
+3. Deploy. Market data routes run as serverless functions, so API keys never reach the browser.
+
+## Disclaimer
+
+For informational purposes only. Not investment, tax, or legal advice. Market data provided by third parties and may be delayed.

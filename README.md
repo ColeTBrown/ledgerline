@@ -9,7 +9,7 @@ A professional-grade financial workstation for analysts, wealth managers, deriva
 | Phase | Scope | Status |
 | --- | --- | --- |
 | 1 | Project setup, design system, layout shell, role switcher, command palette, landing page | ✅ |
-| 2 | Finance math library + test suite | ⏳ |
+| 2 | Finance math library + test suite | ✅ |
 | 3 | Market data layer (Finnhub, U.S. Treasury, SEC EDGAR), source badges, ticker search, ticker strip | ⏳ |
 | 4 | Shared tools: TVM, spreadsheet, scenarios, exports | ⏳ |
 | 5 | Analyst + Corporate Finance tools | ⏳ |
@@ -66,6 +66,7 @@ Also set `SEC_USER_AGENT="Your Firm you@yourfirm.com"`. SEC EDGAR requires a des
 | `pnpm lint` | ESLint |
 | `pnpm typecheck` | Generate route types + `tsc --noEmit` |
 | `pnpm test` | Vitest (never calls live APIs) |
+| `pnpm test:coverage` | Tests with a V8 coverage report |
 | `pnpm check` | Lint + typecheck + tests |
 
 ## Project structure
@@ -75,7 +76,7 @@ app/                 Next.js routes: "/" landing, "/app" workstation, "/api/*" s
 components/          ui/ (primitives), shell/, data/, calc/, dashboard/, marketing/
 config/              brand.ts (rename here), roles.ts
 tools/registry.ts    Every tool: id, roles, group, icon, keywords
-lib/finance/         Pure financial math (Phase 2)
+lib/finance/         Pure financial math — see lib/finance/README.md
 lib/data/            Market data provider interface + adapters (Phase 3)
 lib/format/          Number / currency / percent formatting
 lib/store/           Zustand stores (settings persisted to localStorage)

@@ -2,13 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import { LayoutDashboard, Moon, PanelLeft, PanelRight, Settings, Users } from "lucide-react";
+import { useState } from "react";
+import { Building2, LayoutDashboard, Loader2, Moon, PanelLeft, PanelRight, Settings, Users } from "lucide-react";
 import { ROLE_IDS, ROLES } from "@/config/roles";
 import { TOOLS, toolsForRole } from "@/tools/registry";
 import { useSettings } from "@/lib/store/settings";
 import { useUi } from "@/lib/store/ui";
 import { paletteScore } from "@/lib/palette-filter";
 import { useAltKey, useModKey } from "@/hooks/use-mod-key";
+import { useSymbolSearch } from "@/hooks/use-market";
+import { SYMBOL_RE } from "@/lib/data/symbols";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import {
   Command,
@@ -33,23 +36,59 @@ export function CommandPalette() {
   const mod = useModKey();
   const alt = useAltKey();
 
+  const [search, setSearch] = useState("");
+  const tickerSearch = useSymbolSearch(search);
+  const tickerResults = tickerSearch.data?.ok ? tickerSearch.data.value.slice(0, 8) : [];
+  const typedSymbol = search.trim().toUpperCase();
+  const looksLikeTicker = SYMBOL_RE.test(typedSymbol) && typedSymbol.length <= 6;
+  const openSymbol = (symbol: string) => run(() => router.push(`/app/company?symbol=${encodeURIComponent(symbol)}`));
+
   const roleTools = toolsForRole(role);
   const roleToolIds = new Set(roleTools.map((t) => t.id));
   const otherTools = TOOLS.filter((t) => !roleToolIds.has(t.id));
 
   function run(action: () => void) {
     setOpen(false);
+    setSearch("");
     action();
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        if (!o) setSearch("");
+      }}
+    >
       <DialogContent className="max-w-xl overflow-hidden p-0" showClose={false} aria-describedby={undefined}>
         <DialogTitle className="sr-only">Command palette</DialogTitle>
         <Command loop filter={paletteScore}>
-          <CommandInput placeholder="Jump to a tool, switch role, or run a command…" />
+          <CommandInput placeholder="Search tickers, jump to a tool, or run a command…" value={search} onValueChange={setSearch} />
           <CommandList>
-            <CommandEmpty>No matches. Ticker search connects with the market data layer.</CommandEmpty>
+            {/* cmdk ignores force-mounted ticker rows when deciding "empty". */}
+            {!looksLikeTicker && tickerResults.length === 0 && <CommandEmpty>No matches.</CommandEmpty>}
+            {(looksLikeTicker || tickerResults.length > 0) && (
+              <CommandGroup heading="Tickers" forceMount>
+                {looksLikeTicker && !tickerResults.some((t) => t.symbol === typedSymbol) && (
+                  <CommandItem forceMount value={`ticker-direct ${typedSymbol}`} onSelect={() => openSymbol(typedSymbol)}>
+                    <Building2 />
+                    <span>
+                      Open <span className="font-medium">{typedSymbol}</span> snapshot
+                    </span>
+                    {tickerSearch.isFetching && <Loader2 className="ml-auto animate-spin" />}
+                  </CommandItem>
+                )}
+                {tickerResults.map((t) => (
+                  <CommandItem forceMount key={t.symbol} value={`ticker ${t.symbol}`} onSelect={() => openSymbol(t.symbol)}>
+                    <Building2 />
+                    <span className="w-16 shrink-0 font-medium">{t.displaySymbol}</span>
+                    <span className="truncate text-muted-foreground">{t.description}</span>
+                    <span className="ml-auto pl-4 text-2xs text-subtle-foreground">{t.type}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
             <CommandGroup heading={`${ROLES[role].shortLabel} tools`}>
               <CommandItem value="Dashboard" keywords={["home"]} onSelect={() => run(() => router.push("/app"))}>
                 <LayoutDashboard />

@@ -10,7 +10,7 @@ A professional-grade financial workstation for analysts, wealth managers, deriva
 | --- | --- | --- |
 | 1 | Project setup, design system, layout shell, role switcher, command palette, landing page | ✅ |
 | 2 | Finance math library + test suite | ✅ |
-| 3 | Market data layer (Finnhub, U.S. Treasury, SEC EDGAR), source badges, ticker search, ticker strip | ⏳ |
+| 3 | Market data layer (Finnhub, U.S. Treasury, SEC EDGAR), source badges, ticker search, ticker strip | ✅ |
 | 4 | Shared tools: TVM, spreadsheet, scenarios, exports | ⏳ |
 | 5 | Analyst + Corporate Finance tools | ⏳ |
 | 6 | Wealth Manager tools | ⏳ |
@@ -23,7 +23,10 @@ A professional-grade financial workstation for analysts, wealth managers, deriva
 - **Command palette** (`⌘K` / `Ctrl+K`): jump to any tool, switch role, or run a command.
 - **Dark terminal theme** by default, plus a light client-facing theme.
 - **Number formatting**: tabular monospaced figures, locale-aware separators, configurable decimals, negatives shown with a minus sign or in parentheses.
-- **Live data provenance** (Phase 3): every sourced number shows a LIVE / DELAYED / CACHED / MANUAL badge with its source and timestamp.
+- **Live data with provenance:** every sourced number shows a LIVE / DELAYED / CACHED / MANUAL badge with its source and timestamp. Editing an input flips it to MANUAL, and "reset to live" restores it.
+- **Market data:** Finnhub quotes, search, profiles, metrics and news; the U.S. Treasury par yield curve (no key); SEC EDGAR annual financials. All of it goes through cached, rate-limited server routes. See [DATA_SOURCES.md](DATA_SOURCES.md).
+- **Company Snapshot:** quote, key metrics, profile, recent headlines and five years of SEC financials.
+- **Manual mode:** with no keys, or during a provider outage, every tool keeps working and shows a quiet notice. Missing data is never filled with sample values.
 
 ### Keyboard shortcuts
 
@@ -77,7 +80,7 @@ components/          ui/ (primitives), shell/, data/, calc/, dashboard/, marketi
 config/              brand.ts (rename here), roles.ts
 tools/registry.ts    Every tool: id, roles, group, icon, keywords
 lib/finance/         Pure financial math — see lib/finance/README.md
-lib/data/            Market data provider interface + adapters (Phase 3)
+lib/data/            Provider interface, adapters (Finnhub, Treasury, SEC), cache, rate limiting
 lib/format/          Number / currency / percent formatting
 lib/store/           Zustand stores (settings persisted to localStorage)
 tests/               Vitest suites

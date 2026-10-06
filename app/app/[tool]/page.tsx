@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { TOOLS, getTool } from "@/tools/registry";
-import { ToolPlaceholder } from "@/components/calc/tool-placeholder";
+import { ToolRenderer } from "@/tools/implementations";
 
 export function generateStaticParams() {
   return TOOLS.map((t) => ({ tool: t.id }));
@@ -18,5 +18,5 @@ export default async function ToolPage({ params }: PageProps<"/app/[tool]">) {
   const { tool: id } = await params;
   const tool = getTool(id);
   if (!tool) notFound();
-  return <ToolPlaceholder toolId={tool.id} />;
+  return <ToolRenderer id={tool.id} />;
 }

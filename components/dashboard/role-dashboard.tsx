@@ -2,16 +2,15 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { ArrowUpRight, PlugZap } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { ROLES } from "@/config/roles";
 import { TOOLS, type ToolMeta } from "@/tools/registry";
 import { useSettings } from "@/lib/store/settings";
 import { Badge } from "@/components/ui/badge";
-import { watchLabel } from "@/components/shell/ticker-strip";
+import { MarketTiles } from "./market-tiles";
 
 export function RoleDashboard() {
   const role = useSettings((s) => s.role);
-  const watchlist = useSettings((s) => s.watchlist);
   const config = ROLES[role];
   const roleTools = TOOLS.filter((t) => t.roles.includes(role));
   const sharedTools = TOOLS.filter((t) => t.roles.length === 0);
@@ -28,19 +27,7 @@ export function RoleDashboard() {
 
       <section aria-labelledby="markets-heading">
         <SectionHeading id="markets-heading">Markets</SectionHeading>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
-          {watchlist.slice(0, 10).map((symbol) => (
-            <div key={symbol} className="rounded-md border border-border bg-surface p-3">
-              <div className="text-xs font-medium">{watchLabel(symbol)}</div>
-              <div className="num mt-1 text-lg text-subtle-foreground">—</div>
-              <div className="num text-2xs text-subtle-foreground">No feed</div>
-            </div>
-          ))}
-        </div>
-        <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-          <PlugZap className="size-3.5 text-subtle-foreground" aria-hidden />
-          Live market data is not connected. Every tool runs fully on manual inputs.
-        </div>
+        <MarketTiles />
       </section>
 
       <section aria-labelledby="tools-heading">

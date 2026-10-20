@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/hero.svg" alt="Ledgerline — a professional-grade financial workstation." width="100%" />
+</p>
+
 # Ledgerline
 
 A professional-grade financial workstation for analysts, wealth managers, derivatives traders, fixed-income desks and FP&A teams. Dense terminal-style UI, live market data with provenance, and a fully tested client-side calculation library.

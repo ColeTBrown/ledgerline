@@ -1,10 +1,12 @@
 import { Suspense, type ComponentType } from "react";
 import { CompanySnapshot } from "@/components/tools/company/company-snapshot";
+import { TvmCalculator } from "@/components/tools/tvm/tvm-calculator";
 import { ToolPlaceholder } from "@/components/calc/tool-placeholder";
 
 /** Built tool UIs by registry id. Tools not listed render the placeholder frame. */
 const IMPLEMENTATIONS: Record<string, ComponentType> = {
   company: CompanySnapshot,
+  tvm: TvmCalculator,
 };
 
 export function isToolBuilt(id: string): boolean {

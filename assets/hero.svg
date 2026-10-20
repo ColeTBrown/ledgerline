@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-label="Ledgerline — a professional-grade financial workstation.">
+  <rect width="1280" height="320" fill="#0b0f14"/>
+  <rect width="1280" height="320" fill="none"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+    <text x="80" y="66" fill="#3a4654" font-size="14" letter-spacing="2">AAPL 228.14 ▲0.6%   ^TNX 4.21%   SPY 571.3 ▲0.3%   BTC 67,402 ▼1.1%   EUR/USD 1.084</text>
+    <line x1="80" y1="84" x2="1200" y2="84" stroke="#1b2733" stroke-width="1"/>
+    <text x="80" y="118" fill="#59d499" font-size="19" letter-spacing="5" font-weight="600">FINANCIAL WORKSTATION</text>
+    <text x="78" y="206" fill="#eef4f1" font-size="90" font-weight="700">Ledgerline</text>
+    <text x="80" y="252" fill="#9fb0bf" font-size="27">Live market data with provenance. Terminal-grade tools.</text>
+    <text x="80" y="290" fill="#5c6b78" font-size="18">For analysts, wealth managers, options &amp; fixed-income desks, and FP&amp;A — fully tested finance math.</text>
+  </g>
+  <g transform="translate(1016,120)" font-family="ui-monospace, Menlo, monospace">
+    <rect x="0" y="0" width="184" height="104" rx="10" fill="#111822" stroke="#1f2b38" stroke-width="1.5"/>
+    <text x="16" y="30" fill="#59d499" font-size="13">● LIVE</text>
+    <text x="110" y="30" fill="#4a94e0" font-size="13">SEC EDGAR</text>
+    <text x="16" y="60" fill="#eef4f1" font-size="24" font-weight="700">$1.42B</text>
+    <text x="16" y="84" fill="#5c6b78" font-size="12">revenue · 5y · sourced</text>
+  </g>
+</svg>
